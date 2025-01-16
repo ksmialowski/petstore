@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\Pet\Facades\Pet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class PetController extends Controller
 {
@@ -36,9 +37,14 @@ class PetController extends Controller
 
     public function show(string $id)
     {
-        return view('pet.show', [
-            'pet' => Pet::getPetById($id)
-        ]);
+        /** @var Collection $pet */
+        $pet = Pet::getPetById($id);
+
+        if ($pet->isEmpty()) {
+            abort(404);
+        }
+
+        return view('pet.show', compact('pet'));
     }
 
     public function edit(string $id)

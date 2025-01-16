@@ -29,6 +29,11 @@ class PetRepository implements PetInterface
     public function getPetById(string $id): Collection
     {
         $response = $this->http->get('v2/pet/' . $id);
+
+        if (!$response->successful()) {
+            return collect([]);
+        }
+
         return collect($response->json());
     }
 
