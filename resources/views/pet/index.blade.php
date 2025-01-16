@@ -4,7 +4,7 @@
     <section class="py-5">
         <div class="container px-4 px-lg-5 mt-5">
             <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                @foreach($pets as $pet)
+                @forelse($pets as $pet)
                     <div class="col mb-5">
                         <div class="card h-100">
                             @php
@@ -32,10 +32,15 @@
                             </div>
                         </div>
                     </div>
-                @endforeach
-                <div class="d-flex justify-content-center">
-                    {{ $pets->links() }}
-                </div>
+                @empty
+                    Sorry, no pets found.
+                @endforelse
+
+                @if($pets->isNotEmpty())
+                    <div class="d-flex justify-content-center">
+                        {{ $pets->links() }}
+                    </div>
+                @endif
             </div>
         </div>
     </section>
