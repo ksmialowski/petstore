@@ -10,6 +10,7 @@
                             @php
                                 $photoUrl = Arr::last($pet['photoUrls']);
                                 $isValidUrl = filter_var($photoUrl, FILTER_VALIDATE_URL);
+                                $pet['name'] ??= 'Unknown';
                             @endphp
 
                             <img class="card-img-top"
