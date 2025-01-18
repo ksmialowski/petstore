@@ -18,7 +18,7 @@ class PetRequest extends FormRequest
 
         return [
             'name' => [$isRequired, 'string', 'max:255'],
-            'status' => [$isRequired, 'string', 'in:available, pending, sold'],
+            'status' => [$isRequired, 'string', 'in:available,pending,sold'],
             'file' => [$isRequired, 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ];
     }
