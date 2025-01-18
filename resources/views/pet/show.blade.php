@@ -26,11 +26,21 @@
                         minima ea iste laborum vero?
                     </p>
                     <div class="d-flex">
-                        <a href="{{ route('pets.edit', ['pet' => $pet['id']]) }}"
-                           class="btn btn-outline-dark flex-shrink-0"
-                        >
-                            Edit
-                        </a>
+                        <div>
+                            <a href="{{ route('pets.edit', ['pet' => $pet['id']]) }}"
+                               class="btn btn-outline-dark"
+                            >
+                                Edit
+                            </a>
+                        </div>
+                        <div>
+                            <form method="POST" action="{{ route('pets.destroy', ['pet' => $pet['id']]) }}">
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit" class="btn btn-outline-danger ms-2">Delete</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

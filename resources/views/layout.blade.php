@@ -18,8 +18,34 @@
             <x-nav-link href="{{ route('pets.index', ['status' => 'pending']) }}">Pending</x-nav-link>
             <x-nav-link href="{{ route('pets.index', ['status' => 'sold']) }}">Sold</x-nav-link>
         </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <x-nav-link href="{{ route('pets.create') }}">Add a pet</x-nav-link>
+        </ul>
     </div>
 </nav>
+
+<!-- Toasts-->
+<div class="toast-container top-0 end-0 p-3">
+    @foreach(['success', 'danger'] as $alert_code)
+        @if(session()->has($alert_code))
+            @foreach(session()->get($alert_code, []) as $message)
+                <div class="toast text-bg-{{ $alert_code }}" role="alert" data-bs-delay="3000">
+                    <div class="toast-body">
+                        <div class="d-flex gap-4">
+                            <span><i class="fa-solid fa-check-circle fa-lg"></i></span>
+                            <div class="d-flex flex-grow-1 align-items-center">
+                                <span class="fw-semibold">{{ $message }}</span>
+                            </div>
+                            <button type="button" class="btn-close ms-auto me-2" data-bs-dismiss="toast"
+                                    aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+    @endforeach
+</div>
+
 <!-- Section-->
 @yield('content')
 <!-- Footer-->
@@ -30,5 +56,14 @@
         </p>
     </div>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toastElement = document.querySelector('.toast');
+        const toast = new bootstrap.Toast(toastElement);
+
+        toast.show();
+    });
+</script>
 </body>
 </html>
