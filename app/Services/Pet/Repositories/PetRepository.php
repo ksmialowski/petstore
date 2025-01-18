@@ -43,15 +43,9 @@ class PetRepository implements PetInterface
         return $response->successful();
     }
 
-    public function updatePet(array $data): bool
+    public function updatePet(string $id, array $data): bool
     {
-        $response = $this->http->put('v2/pet/', $data);
-        return $response->successful();
-    }
-
-    public function updatePetForm(string $id, array $data): bool
-    {
-        $response = $this->http->asForm()->put('v2/pet/' . $id, $data);
+        $response = $this->http->asForm()->post('v2/pet/' . $id, $data);
         return $response->successful();
     }
 
