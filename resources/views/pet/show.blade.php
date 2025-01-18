@@ -21,23 +21,46 @@
                     </p>
                     <div class="d-flex">
                         <div>
-                            <a href="{{ route('pets.edit', ['pet' => $pet->id]) }}"
-                               class="btn btn-outline-dark"
-                            >
+                            <a href="{{ route('pets.edit', ['pet' => $pet->id]) }}" class="btn btn-outline-dark">
                                 Edit
                             </a>
                         </div>
                         <div>
-                            <form method="POST" action="{{ route('pets.destroy', ['pet' => $pet->id]) }}">
-                                @csrf
-                                @method('DELETE')
-
-                                <button type="submit" class="btn btn-outline-danger ms-2">Delete</button>
-                            </form>
+                            <button type="button" class="btn btn-outline-danger ms-2" data-bs-toggle="modal"
+                                    data-bs-target="#deletePet">
+                                Delete
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <div class="modal fade" id="deletePet" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="deletePetLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deletePetLabel">
+                        Are you sure you want to delete this?
+                    </h1>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        You are about to permanently delete this data. This action cannot be undone. Do you wish to
+                        continue?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="POST" action="{{ route('pets.destroy', ['pet' => $pet->id]) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
