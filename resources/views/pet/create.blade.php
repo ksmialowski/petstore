@@ -5,7 +5,7 @@
         <div class="container px-4 px-lg-5 my-5">
             <div class="row gx-4 gx-lg-5 align-items-center">
                 <div class="col-md-12">
-                    <form method="POST" action="{{ route('pets.store') }}">
+                    <form method="POST" action="{{ route('pets.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="row mb-4">
                             <div class="col">
@@ -60,12 +60,12 @@
                         <div class="d-flex justify-content-center mb-4">
                             <div class="mb-3">
                                 <input
-                                    class="form-control @error('photo') is-invalid @enderror"
+                                    class="form-control @error('file') is-invalid @enderror"
                                     type="file"
                                     id="petFile"
-                                    name="photo"
+                                    name="file"
                                 >
-                                @error('photo')
+                                @error('file')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

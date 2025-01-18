@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PetRequest;
+use App\Services\FileUpload\FileUploadService;
 use App\Services\Pet\Facades\Pet;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 
 class PetController extends Controller
@@ -19,6 +22,7 @@ class PetController extends Controller
 
         return view('pet.index', [
             'pets' => Pet::getPetsByStatus($status)
+                ->map(fn(array $pet) => $this->petToObject($pet))
                 ->paginate(8)
                 ->appends([
                     'status' => $status
@@ -31,12 +35,18 @@ class PetController extends Controller
         return view('pet.create');
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function store(PetRequest $request)
     {
-        $pet = Pet::createPet($request->validated());
+        $data = $request->safe()->except(['file']);
+        $this->addImageToData($data, $request->file('file'));
 
-        if ($pet) {
-            return redirect()->route('pets.index', ['status' => $request->status])
+        $petId = Pet::createPet($data);
+
+        if ($petId) {
+            return redirect()->route('pets.show', ['pet' => $petId])
                 ->with('success', ['Pet created successfully']);
         }
 
@@ -53,7 +63,9 @@ class PetController extends Controller
             abort(404);
         }
 
-        return view('pet.show', compact('pet'));
+        return view('pet.show', [
+            'pet' => $this->petToObject($pet)
+        ]);
     }
 
     public function edit(string $id)
@@ -65,15 +77,26 @@ class PetController extends Controller
             abort(404);
         }
 
-        return view('pet.edit', compact('pet'));
+        return view('pet.edit', [
+            'pet' => $this->petToObject($pet)
+        ]);
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function update(PetRequest $request, string $id)
     {
-        $pet = Pet::updatePet($id, $request->validated());
+        $data = $request->safe()->except(['file']);
+
+        if ($file = $request->file('file')) {
+            $this->addImageToData($data, $file);
+        }
+
+        $pet = Pet::updatePet($id, $data);
 
         if ($pet) {
-            return redirect()->route('pets.edit', ['pet' => $id])
+            return redirect()->route('pets.show', ['pet' => $id])
                 ->with('success', ['Pet updated successfully']);
         }
 
@@ -92,5 +115,27 @@ class PetController extends Controller
 
         return redirect()->route('pets.show', ['pet' => $id])
             ->with('danger', ['Failed to delete pet']);
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    private function addImageToData(array &$data, UploadedFile $file): void
+    {
+        $url = FileUploadService::upload($file);
+
+        if ($url) {
+            $data['photoUrls'] = [$url];
+        }
+    }
+
+    private function petToObject($pet): object
+    {
+        return (object) [
+            'id' => $pet['id'] ?? 0,
+            'name' => $pet['name'] ?? null,
+            'status' => $pet['status'] ?? null,
+            'photo' => filter_var(\Arr::last($pet['photoUrls']) ?? null, FILTER_VALIDATE_URL),
+        ];
     }
 }

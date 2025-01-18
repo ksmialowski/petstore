@@ -7,26 +7,20 @@
                 @forelse($pets as $pet)
                     <div class="col mb-5">
                         <div class="card h-100">
-                            @php
-                                $photoUrl = Arr::last($pet['photoUrls']);
-                                $isValidUrl = filter_var($photoUrl, FILTER_VALIDATE_URL);
-                                $pet['name'] ??= 'Unknown';
-                            @endphp
-
                             <img class="card-img-top"
                                  style="max-width: 450px; max-height:300px;"
-                                 src="{{ $isValidUrl ? $photoUrl : 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg' }}"
-                                 alt="{{ $pet['name'] }}"
+                                 src="{{ $pet->photo ?: 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg' }}"
+                                 alt="{{ $pet->name }}"
                             />
                             <div class="card-body p-4">
                                 <div class="text-center">
-                                    <h5 class="fw-bolder">{{ Str::ucfirst($pet['name']) }}</h5>
-                                    Status: {{ Str::ucfirst($pet['status']) }}
+                                    <h5 class="fw-bolder">{{ Str::ucfirst($pet->name) }}</h5>
+                                    Status: {{ Str::ucfirst($pet->status) }}
                                 </div>
                             </div>
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                 <div class="text-center">
-                                    <a class="btn btn-outline-dark mt-auto" href="{{ route('pets.show', ['pet' => $pet['id']]) }}">
+                                    <a class="btn btn-outline-dark mt-auto" href="{{ route('pets.show', ['pet' => $pet->id]) }}">
                                         Show details
                                     </a>
                                 </div>

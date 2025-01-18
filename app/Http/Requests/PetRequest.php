@@ -14,9 +14,12 @@ class PetRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isRequired = $this->method() == 'POST' ? 'required' : 'nullable';
+
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'status' => ['required', 'string', 'in:available,pending,sold'],
+            'name' => [$isRequired, 'string', 'max:255'],
+            'status' => [$isRequired, 'string', 'in:available, pending, sold'],
+            'file' => [$isRequired, 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ];
     }
 }
