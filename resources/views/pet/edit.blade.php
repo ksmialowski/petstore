@@ -17,7 +17,7 @@
                                         id="petName"
                                         class="form-control @error('name') is-invalid @enderror"
                                         name="name"
-                                        value="{{ old('name', $pet->name) }}"
+                                        value="{{ old('name', Str::ucfirst($pet->name)) }}"
                                     placeholder="Name"
                                     />
                                     @error('name')

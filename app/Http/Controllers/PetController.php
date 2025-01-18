@@ -90,7 +90,7 @@ class PetController extends Controller
     {
         $data = $request->safe()->except(['file']);
 
-        if ($file = $request->file('file')) {
+        if ($file = $request->file('file') ?? \Arr::last(Pet::getPetById($id)['photoUrls'] ?? null)) {
             $this->addImageToData($data, $file);
         }
 
@@ -121,9 +121,9 @@ class PetController extends Controller
     /**
      * @throws ConnectionException
      */
-    private function addImageToData(array &$data, UploadedFile $file): void
+    private function addImageToData(array &$data, UploadedFile|string $file): void
     {
-        $url = FileUploadService::upload($file);
+        $url = $file instanceof UploadedFile ? FileUploadService::upload($file) : $file;
 
         if ($url) {
             $data['photoUrls'] = [$url];
