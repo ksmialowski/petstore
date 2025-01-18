@@ -13,7 +13,7 @@ class PetRepository implements PetInterface
 
     public function __construct()
     {
-        $this->http = Http::baseUrl('https://petstore.swagger.io')->acceptJson();
+        $this->http = Http::baseUrl(config('url.pet_base_url', ''))->acceptJson();
     }
 
     /**

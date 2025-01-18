@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 class PetController extends Controller
 {
     CONST DEFAULT_STATUS = 'available';
+    CONST RECORDS_PER_PAGE = 8;
     public function index()
     {
         $status = request('status');
@@ -23,7 +24,7 @@ class PetController extends Controller
         return view('pet.index', [
             'pets' => Pet::getPetsByStatus($status)
                 ->map(fn(array $pet) => $this->petToObject($pet))
-                ->paginate(8)
+                ->paginate(self::RECORDS_PER_PAGE)
                 ->appends([
                     'status' => $status
                 ])
