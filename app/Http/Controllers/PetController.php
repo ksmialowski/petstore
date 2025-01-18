@@ -90,7 +90,7 @@ class PetController extends Controller
                 ->with('success', ['Pet deleted successfully']);
         }
 
-        return redirect()->route('pets.index')
+        return redirect()->route('pets.show', ['pet' => $id])
             ->with('danger', ['Failed to delete pet']);
     }
 }
